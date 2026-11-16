@@ -6,6 +6,8 @@ const variants = {
     secondary: "btn-secondary",
     danger: "btn-danger",
     subtleDanger: "btn-subtle-danger",
+    outline: "btn-outline",
+    outlineDanger: "btn-outline-danger",
 }
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
