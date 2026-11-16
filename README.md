@@ -39,7 +39,7 @@ Gunakan Node.js **22.12 atau lebih baru** dan npm. Buka alamat yang ditampilkan 
 - Contoh komunikasi API GET dengan pemisahan model, parameter, source, dan repository.
 - ESLint, Prettier, unit test, dan konfigurasi tes browser Playwright.
 
-Saat dibuka, halaman menampilkan **satu produk contoh: Pulpen**. Tombol **Pilih produk** memperlihatkan callback dari kartu ke state halaman. Tidak ada request API otomatis dan belum ada penyimpanan melalui localStorage.
+Saat dibuka, halaman menampilkan 5 produk awal (sesuai mockup) yang disimpan di state React. Perubahan (tambah, edit, hapus) tidak disimpan permanen dan kembali ke data awal saat halaman di-refresh.
 
 Template ini menyediakan environment serta contoh dasar. Fitur tugas seperti CRUD lengkap, pencarian, detail produk, halaman tambahan, dan 404 dikembangkan mahasiswa sesuai instruksi dosen.
 
@@ -74,29 +74,13 @@ Alur props: `ProductsPage → ProductGrid → ProductCard → Button`. Callback 
 
 Folder `app` tetap menggunakan Vite. Nama `page.tsx` tidak otomatis membentuk route; daftarkan setiap URL di `app/routes.tsx`. Route `/` saat ini mengarahkan ke `/products`, begitu juga URL yang belum dikenali. Ubah fallback tersebut saat tugas meminta halaman 404. Hosting produksi perlu mendukung fallback SPA ke `index.html`.
 
-## Mencoba GET API (opsional)
+## Fitur
 
-Aplikasi dapat berjalan dengan produk contoh tanpa backend. Untuk mencoba tombol **Muat dari API**:
-
-```sh
-cp .env.example .env.local
-```
-
-Sesuaikan alamat backend di `.env.local`:
-
-```dotenv
-VITE_API_BASE_URL=http://localhost:3000/api
-```
-
-Restart Vite setelah mengubah konfigurasi. Tombol akan meminta `GET http://localhost:3000/api/products`. Backend harus mengizinkan origin frontend melalui CORS.
-
-Response yang diharapkan adalah **array langsung**:
-
-```json
-[{ "id": 1, "name": "Pulpen", "price": 5000 }]
-```
-
-Jika backend menggunakan format lain, misalnya `{ "data": [...] }`, sesuaikan pemetaan di repository. Variabel `VITE_*` masuk ke aplikasi browser, jadi jangan menyimpan token atau secret privat di dalamnya. Berkas `.env.local` tidak ikut dipublikasikan.
+- Daftar produk dalam kartu (ID, nama, harga Rupiah), jumlah produk, dan pencarian berdasarkan nama.
+- Pop-up Tambah, Edit, dan Hapus (dengan konfirmasi). Validasi: nama wajib diisi, harga bilangan bulat lebih dari 0.
+- Komponen disusun dengan Atomic Design: `Button`, `TextField` (atoms); `ProductCard`, `SearchField`, `Modal` (molecules); `ProductGrid`, `ProductFormDialog`, `DeleteProductDialog` (organisms); `ProductsPage` memegang state.
+- Logika daftar produk berupa fungsi murni di `src/utils/productList.ts` dan diuji di `tests/product-list.test.ts`.
+- Integrasi dengan backend ExpressJS bukan bagian dari tugas ini.
 
 ## Perintah yang tersedia
 
@@ -111,7 +95,7 @@ Jika backend menggunakan format lain, misalnya `{ "data": [...] }`, sesuaikan pe
 | `npm run test:e2e` | Menjalankan tes browser |
 | `npm run format` | Memformat berkas dengan Prettier |
 
-Tes browser menggunakan Google Chrome yang terpasang dan memerlukan port 5173 yang belum dipakai. Request API pada tes di-mock, sehingga tidak memerlukan backend aktif.
+Tes browser menggunakan Google Chrome yang terpasang dan memerlukan port 5173 yang belum dipakai. Aplikasi tidak memerlukan backend.
 
 ## Mengembangkan tugas
 
