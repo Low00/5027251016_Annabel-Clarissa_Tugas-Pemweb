@@ -1,0 +1,11 @@
+@reference "../../../../app/globals.css";
+
+.form {
+    @apply flex flex-col gap-4;
+}
+.id {
+    @apply text-sm text-slate-500;
+}
+.actions {
+    @apply mt-2 grid grid-cols-2 gap-3;
+}

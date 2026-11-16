@@ -1,0 +1,23 @@
+@reference "../../../../app/globals.css";
+
+.icon {
+    @apply mb-3 inline-flex size-12 items-center justify-center rounded-xl bg-red-50;
+}
+.iconSvg {
+    @apply size-6 text-red-600;
+}
+.summary {
+    @apply rounded-lg border border-slate-200 p-4;
+}
+.id {
+    @apply text-xs text-slate-500;
+}
+.name {
+    @apply mt-1 text-lg font-bold wrap-break-word text-slate-900;
+}
+.price {
+    @apply text-lg font-bold text-blue-600;
+}
+.actions {
+    @apply mt-5 grid grid-cols-2 gap-3;
+}
