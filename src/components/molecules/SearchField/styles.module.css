@@ -1,0 +1,11 @@
+@reference "../../../../app/globals.css";
+
+.wrapper {
+    @apply relative w-full max-w-md;
+}
+.icon {
+    @apply pointer-events-none absolute top-1/2 left-3 size-5 -translate-y-1/2 text-slate-500;
+}
+.input {
+    @apply min-h-11 w-full rounded-lg border border-slate-300 bg-white pr-3 pl-10 text-sm text-slate-900 placeholder:text-slate-500;
+}
