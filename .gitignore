@@ -17,3 +17,10 @@ test-results/
 .DS_Store
 *.log
 *.local
+
+# Berkas sampah Windows
+*:Zone.Identifier
+
+# Data backend yang dibuat otomatis saat server berjalan
+backend/data/products.json
+backend/data/*.tmp
