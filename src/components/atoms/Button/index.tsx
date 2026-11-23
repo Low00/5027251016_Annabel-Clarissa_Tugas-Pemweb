@@ -1,17 +1,9 @@
 import type { ButtonHTMLAttributes } from "react"
+import { variants, type ButtonVariant } from "./variants"
 import styles from "./styles.module.css"
 
-const variants = {
-    primary: "btn-primary",
-    secondary: "btn-secondary",
-    danger: "btn-danger",
-    subtleDanger: "btn-subtle-danger",
-    outline: "btn-outline",
-    outlineDanger: "btn-outline-danger",
-}
-
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: keyof typeof variants
+    variant?: ButtonVariant
 }
 
 export default function Button({
