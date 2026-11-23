@@ -1,104 +1,112 @@
-# React Template — Pemrograman Web
+# Manajemen Produk (React + Express)
 
-Template environment praktikum Pemrograman Web menggunakan **React, TypeScript, Vite, React Router, dan Tailwind CSS**. Mahasiswa menggunakan template ini sebagai fondasi repository tugas masing-masing, lalu mengembangkan fitur sesuai instruksi perkuliahan.
+Aplikasi web manajemen produk untuk mata kuliah **Pemrograman Web**. Frontend dibangun dengan React, TypeScript, Vite, React Router, dan Tailwind CSS, lalu terhubung ke backend Express di folder `backend/` lewat REST API.
 
-## Membuat repository tugas
+Pengembang: Annabel Clarissa (5027251016)
 
-1. Buka [react-template](https://github.com/anasmcfudy/react-template).
-2. Pilih **Use this template → Create a new repository**.
-3. Isi nama repository tugas pada akun GitHub sendiri.
-4. Clone repository yang baru dibuat ke komputer.
+## Fitur
+
+- **Dashboard** (`/dashboard`): ringkasan total produk, rata-rata harga, produk termurah dan termahal, serta tiga produk terbaru.
+- **Daftar produk** (`/products`): kartu produk, jumlah produk, pencarian berdasarkan nama, serta tambah, edit, dan hapus lewat pop-up. Semua perubahan tersimpan di database melalui API.
+- **Detail produk** (`/products/:id`): menampilkan produk sesuai `id` pada URL, dengan tautan kembali ke daftar. ID yang tidak ada atau tidak valid menampilkan pesan "Produk tidak ditemukan".
+- **Halaman 404**: URL yang tidak terdaftar menampilkan pesan dan tautan ke Dashboard atau Daftar Produk.
+- **Layout responsif**: sidebar berubah menjadi bilah navigasi di atas pada layar kecil.
+
+## Teknologi
+
+React 19 · TypeScript · Vite · React Router 7 · Tailwind CSS 4 · ESLint · Prettier · Playwright
+
+## Rute
+
+| URL | Halaman |
+| --- | --- |
+| `/` | Dialihkan ke `/dashboard` |
+| `/dashboard` | Dashboard |
+| `/products` | Daftar produk dan pengelolaan produk |
+| `/products/:id` | Detail produk |
+| `*` | Halaman 404 |
+
+Semua rute berada di bawah satu layout (`PageLayout`: sidebar + `<Outlet />`).
+
+## Menjalankan aplikasi
+
+Prasyarat: **Node.js 22.12 atau lebih baru** dan npm.
+
+### 1. Backend
+
+Backend Express ada di folder `backend/` pada repository ini. Data disimpan di berkas JSON, jadi tidak perlu database.
 
 ```sh
-git clone https://github.com/USERNAME/NAMA-REPOSITORY.git
-cd NAMA-REPOSITORY
+cd backend
+npm install
+npm start                   # berjalan di http://localhost:3000
+```
+
+Saat pertama dijalankan, server membuat `backend/data/products.json` dari data awal `products.seed.json` (5 produk). Hapus `products.json` untuk mengembalikan data awal. Gunakan `npm run dev` agar server restart otomatis saat kode berubah, dan `npm test` untuk menjalankan tes backend.
+
+Backend mengizinkan origin frontend (`http://127.0.0.1:5173` dan `http://localhost:5173`) melalui CORS. Pengaturan ini dapat diubah lewat variabel `CORS_ORIGIN`, dan port lewat `PORT`.
+
+### 2. Frontend
+
+Dari root repository ini, di terminal lain:
+
+```sh
+cp .env.example .env.local  # VITE_API_BASE_URL=http://localhost:3000
 npm ci
 npm run dev
 ```
 
-Ganti `USERNAME` dan `NAMA-REPOSITORY` dengan akun serta nama repository tugas sendiri. Perubahan dan pengumpulan tugas dilakukan di repository tersebut.
+Buka `http://127.0.0.1:5173`. Restart `npm run dev` setelah mengubah `.env.local`.
 
-Untuk sekadar mencoba template dosen:
+### Endpoint backend yang dipakai
 
-```sh
-git clone https://github.com/anasmcfudy/react-template.git
-cd react-template
-npm ci
-npm run dev
-```
+| Aksi | Request |
+| --- | --- |
+| Daftar produk | `GET /products` |
+| Detail produk | `GET /products/:id` (404 jika tidak ada) |
+| Tambah | `POST /products` dengan body `{ name, price }` |
+| Ubah | `PUT /products` dengan body `{ id, name, price }` |
+| Hapus | `DELETE /products/:id` |
 
-Gunakan Node.js **22.12 atau lebih baru** dan npm. Buka alamat yang ditampilkan Vite, biasanya `http://127.0.0.1:5173`.
+Harga harus bilangan bulat lebih dari 0 (divalidasi di frontend dan backend). `GET /products` juga mendukung `?q=` untuk mencari berdasarkan nama.
 
-## Yang sudah tersedia
+## Perintah npm
 
-- Konfigurasi React dan TypeScript dengan pemeriksaan tipe `strict`.
-- Vite sebagai development server dan build tool.
-- React Router dengan nested route serta layout yang menggunakan `Outlet`.
-- Tailwind CSS v4 melalui PostCSS, CSS Modules, dan token tema.
-- Contoh setiap tingkat Atomic Design: `Button`, `ProductCard`, `ProductGrid`, `PageLayout`, dan `ProductsPage`.
-- Contoh komunikasi API GET dengan pemisahan model, parameter, source, dan repository.
-- ESLint, Prettier, unit test, dan konfigurasi tes browser Playwright.
+| Perintah | Fungsi |
+| --- | --- |
+| `npm run dev` | Development server Vite |
+| `npm run typecheck` | Pemeriksaan tipe TypeScript |
+| `npm run lint` | ESLint tanpa warning |
+| `npm test` | Unit test (lapisan data, validasi, pencarian, ringkasan) |
+| `npm run test:e2e` | Tes browser Playwright (API di-mock, backend tidak perlu aktif) |
+| `npm run build` | Typecheck lalu build produksi ke `dist/` |
+| `npm run format` | Merapikan kode dengan Prettier |
 
-Saat dibuka, halaman menampilkan 5 produk awal (sesuai mockup) yang disimpan di state React. Perubahan (tambah, edit, hapus) tidak disimpan permanen dan kembali ke data awal saat halaman di-refresh.
-
-Template ini menyediakan environment serta contoh dasar. Fitur tugas seperti CRUD lengkap, pencarian, detail produk, halaman tambahan, dan 404 dikembangkan mahasiswa sesuai instruksi dosen.
+Tes browser memakai Google Chrome yang terpasang dan membutuhkan port 5173 yang belum dipakai.
 
 ## Struktur proyek
 
 ```text
-app/
-  entry.tsx             # Entry browser dan BrowserRouter
-  globals.css           # Import Tailwind dan CSS global
-  routes.tsx            # Deklarasi route
-  page.tsx              # Pembungkus halaman root
-  products/page.tsx      # Pembungkus halaman produk
+backend/                     # Backend Express (src/, data/, test/)
+app/                         # Entry, BrowserRouter, dan deklarasi route
+  routes.tsx                 # Semua route dalam satu layout
+  dashboard/ products/ not-found/   # Pembungkus tiap halaman
 src/
-  components/
-    atoms/              # Button
-    molecules/          # ProductCard
-    organisms/          # ProductGrid
-    templates/          # PageLayout dan Outlet
-    pages/              # State serta koordinasi halaman
-  data/product/
-    model/
-    param/
-    source/
-    repository/
-  styles/
-  types/
-  utils/
-tests/
+  components/                # Atomic Design
+    atoms/                   # Button, ButtonLink, TextField
+    molecules/               # ProductCard, SearchField, Modal, NavItem, StatCard, Alert, StatusPanel
+    organisms/               # Sidebar, ProductGrid, ProductFormDialog, DeleteProductDialog
+    templates/               # PageLayout (sidebar + Outlet)
+    pages/                   # DashboardPage, ProductsPage, ProductDetailPage, NotFoundPage
+  data/product/              # source (HTTP) -> repository -> model (validasi response)
+  utils/                     # formatRupiah, validasi form, pencarian, ringkasan dashboard
+  styles/                    # Tema dan komponen Tailwind
+tests/                       # Unit test (node:test) dan tes browser (Playwright)
 ```
 
-Alur props: `ProductsPage → ProductGrid → ProductCard → Button`. Callback berjalan kembali menuju pemilik state.
+Alur data: halaman memanggil `productRepository`, yang memakai `ProductRemote` untuk request HTTP dan `ProductModel` untuk memvalidasi response sebelum dipakai antarmuka.
 
-Folder `app` tetap menggunakan Vite. Nama `page.tsx` tidak otomatis membentuk route; daftarkan setiap URL di `app/routes.tsx`. Route `/` saat ini mengarahkan ke `/products`, begitu juga URL yang belum dikenali. Ubah fallback tersebut saat tugas meminta halaman 404. Hosting produksi perlu mendukung fallback SPA ke `index.html`.
+## Catatan
 
-## Fitur
-
-- Daftar produk dalam kartu (ID, nama, harga Rupiah), jumlah produk, dan pencarian berdasarkan nama.
-- Pop-up Tambah, Edit, dan Hapus (dengan konfirmasi). Validasi: nama wajib diisi, harga bilangan bulat lebih dari 0.
-- Komponen disusun dengan Atomic Design: `Button`, `TextField` (atoms); `ProductCard`, `SearchField`, `Modal` (molecules); `ProductGrid`, `ProductFormDialog`, `DeleteProductDialog` (organisms); `ProductsPage` memegang state.
-- Logika daftar produk berupa fungsi murni di `src/utils/productList.ts` dan diuji di `tests/product-list.test.ts`.
-- Integrasi dengan backend ExpressJS bukan bagian dari tugas ini.
-
-## Perintah yang tersedia
-
-| Perintah | Kegunaan |
-| --- | --- |
-| `npm run dev` | Menjalankan aplikasi untuk pengembangan |
-| `npm run typecheck` | Memeriksa tipe TypeScript |
-| `npm run lint` | Memeriksa aturan kode |
-| `npm test` | Menjalankan unit test |
-| `npm run build` | Memeriksa tipe dan membuat build produksi |
-| `npm run preview` | Melihat hasil build secara lokal |
-| `npm run test:e2e` | Menjalankan tes browser |
-| `npm run format` | Memformat berkas dengan Prettier |
-
-Tes browser menggunakan Google Chrome yang terpasang dan memerlukan port 5173 yang belum dipakai. Aplikasi tidak memerlukan backend.
-
-## Mengembangkan tugas
-
-Gunakan komponen yang tersedia sebagai contoh, lalu tambahkan fitur sesuai kebutuhan tugas. Pertahankan pemisahan tanggung jawab komponen, gunakan props/callback dengan jelas, dan tempatkan state bersama di atas halaman yang memakainya.
-
-Mahasiswa harus dapat menjelaskan kode yang dikumpulkan, termasuk bagian yang dibuat dengan bantuan AI. Sesuaikan README pada repository tugas dengan fitur dan cara menjalankan aplikasi masing-masing.
+- Styling memakai Tailwind CSS: utility class langsung pada `className` untuk komponen baru, dan `@apply` pada CSS Module untuk komponen bawaan template.
+- Nilai `VITE_*` terlihat oleh pengguna browser, jadi jangan isi token atau secret.
