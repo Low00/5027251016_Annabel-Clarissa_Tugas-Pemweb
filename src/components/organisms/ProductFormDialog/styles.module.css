@@ -6,6 +6,9 @@
 .id {
     @apply text-sm text-slate-500;
 }
+.error {
+    @apply rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700;
+}
 .actions {
     @apply mt-2 grid grid-cols-2 gap-3;
 }

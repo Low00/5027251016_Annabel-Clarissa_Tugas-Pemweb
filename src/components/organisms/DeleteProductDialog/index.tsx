@@ -7,12 +7,16 @@ import styles from "./styles.module.css"
 
 type Props = {
     product: Product
+    isSaving: boolean
+    error: string
     onConfirm: () => void
     onClose: () => void
 }
 
 export default function DeleteProductDialog({
     product,
+    isSaving,
+    error,
     onConfirm,
     onClose,
 }: Props) {
@@ -33,12 +37,17 @@ export default function DeleteProductDialog({
                 <p className={styles.name}>{product.name}</p>
                 <p className={styles.price}>{formatRupiah(product.price)}</p>
             </div>
+            {error && (
+                <p role="alert" className={styles.error}>
+                    {error}
+                </p>
+            )}
             <div className={styles.actions}>
                 <Button variant="outline" onClick={onClose} data-autofocus>
                     Batal
                 </Button>
-                <Button variant="danger" onClick={onConfirm}>
-                    Hapus Produk
+                <Button variant="danger" onClick={onConfirm} disabled={isSaving}>
+                    {isSaving ? "Menghapus…" : "Hapus Produk"}
                 </Button>
             </div>
         </Modal>
