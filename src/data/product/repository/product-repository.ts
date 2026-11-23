@@ -1,16 +1,21 @@
 import type { ProductRemoteSource } from "../source/product-remote.ts"
 import ProductModel from "../model/product-model.ts"
 import ProductListParam from "../param/product-list-param.ts"
+import type { Product, ProductValues } from "../../../types/product"
 
-// Maps remote payloads into validated application models.
+// Mengubah payload remote menjadi model aplikasi yang sudah divalidasi.
 export default function ProductRepository({
     getProductListRemote,
+    getProductRemote,
+    createProductRemote,
+    updateProductRemote,
+    deleteProductRemote,
 }: ProductRemoteSource) {
     async function getProductList(
         param = new ProductListParam(),
     ): Promise<ProductModel[]> {
         const response = await getProductListRemote(param)
-        // The endpoint contract returns a direct array of products.
+        // Kontrak endpoint: response berupa array produk.
         if (!Array.isArray(response)) {
             throw new TypeError(
                 "Contoh ini mengharapkan response API berupa array produk.",
@@ -26,5 +31,21 @@ export default function ProductRepository({
         return products
     }
 
-    return { getProductList }
+    async function getProduct(id: number): Promise<ProductModel> {
+        return ProductModel.fromResponse(await getProductRemote(id))
+    }
+
+    async function createProduct(values: ProductValues): Promise<ProductModel> {
+        return ProductModel.fromResponse(await createProductRemote(values))
+    }
+
+    async function updateProduct(product: Product): Promise<ProductModel> {
+        return ProductModel.fromResponse(await updateProductRemote(product))
+    }
+
+    async function deleteProduct(id: number): Promise<void> {
+        await deleteProductRemote(id)
+    }
+
+    return { getProductList, getProduct, createProduct, updateProduct, deleteProduct }
 }
