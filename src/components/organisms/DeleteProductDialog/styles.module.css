@@ -18,6 +18,9 @@
 .price {
     @apply text-lg font-bold text-blue-600;
 }
+.error {
+    @apply mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700;
+}
 .actions {
     @apply mt-5 grid grid-cols-2 gap-3;
 }

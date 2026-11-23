@@ -12,12 +12,16 @@ import styles from "./styles.module.css"
 type Props = {
     // Without a product the dialog creates one; with a product it edits it.
     product?: Product
+    isSaving: boolean
+    error: string
     onSubmit: (values: ProductValues) => void
     onClose: () => void
 }
 
 export default function ProductFormDialog({
     product,
+    isSaving,
+    error,
     onSubmit,
     onClose,
 }: Props) {
@@ -70,12 +74,21 @@ export default function ProductFormDialog({
                     error={errors.price}
                     onChange={(event) => setPrice(event.target.value)}
                 />
+                {error && (
+                    <p role="alert" className={styles.error}>
+                        {error}
+                    </p>
+                )}
                 <div className={styles.actions}>
                     <Button variant="outline" onClick={onClose}>
                         Batal
                     </Button>
-                    <Button type="submit">
-                        {isEdit ? "Simpan Perubahan" : "Simpan Produk"}
+                    <Button type="submit" disabled={isSaving}>
+                        {isSaving
+                            ? "Menyimpan…"
+                            : isEdit
+                              ? "Simpan Perubahan"
+                              : "Simpan Produk"}
                     </Button>
                 </div>
             </form>
